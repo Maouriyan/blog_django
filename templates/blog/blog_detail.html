@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block head_title %}
+  {% if not has_blog or not requested_user.blog.is_public %}
+    No blog found
+  {% else %}
+    {{ requested_user.blog.title }} -- @{{ requested_user.username }}'s Blog
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if not has_blog %}
+    {% if user.id == requested_user.id %}
+      <div id="no-blog-card" class="center flow-text">
+        <div class="card">
+          {% if requested_user.profile.is_blogger %}
+            <div class="card-content">
+              <span class="card-title">You haven't created a blog.</span>
+              <p class="grey-text">Blogs are a nice way to show off your writing skills and documenting your life.
+                <br/>You should give a try to it!</p>
+            </div>
+            <div class="card-action">
+              <a href="{% url 'blog:blog_create' %}">Start blogging!</a>
+            </div>
+          {% else %}
+            <div class="card-content">
+              <span class="card-title">You are not a blogger</span>
+              <p class="grey-text">You registered to nyx as a reader, you can't have a blog.</p>
+            </div>
+            <div class="card-action">
+              <a href="#">Contact the administrators.</a>
+            </div>
+          {% endif %}
+          </div>
+        </div>
+    {% else %}
+      <div id="no-blog-card" class="center flow-text">
+        <div class="card">
+            <div class="card-content">
+              <span class="card-title">No blog found.</span>
+              <p class="grey-text">This user doesn't seem to have a blog.</p>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+  {% elif not requested_user.blog.is_public %}
+    <div id="no-blog-card" class="center flow-text">
+      <div class="card">
+          <div class="card-content">
+            <span class="card-title">This blog is not publicly accessbile.</span>
+            <p class="grey-text">This user doesn't want anyone to read his blog (strange, isn't it?).</p>
+          </div>
+        </div>
+    </div>
+  {% else %}
+    <nav class="blue accent-2 z-depth-0">
+      <div class="container">
+      <div class="nav-wrapper row">
+        <div class="col s12">
+          <a href="/" class="breadcrumb">Home</a>
+          <a href="{{ blog.author.profile.get_absolute_url }}" class="breadcrumb">@{{ blog.author.username }}</a>
+          <span class="breadcrumb">{{ blog.title }}</span>
+        </div>
+      </div>
+      </div>
+    </nav>
+    <div class="container">
+      <h4 class="light" style="border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 30px;">
+        {{ requested_user.blog.title }}
+      </h4>
+      <p class="grey-text" style="font-size: 1.2em;">{{ requested_user.blog.tag_line }}</p>
+      {% include "blog/_post_list.html" %}
+    </div>
+  {% endif %}
+{% endblock %}

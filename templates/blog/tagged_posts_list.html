@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block head_title %}{{ tag }} posts{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h4 class="light header">{{ tag }}</h4>
+  <p class="grey-text" style="font-size: 1.2em;">Stories about {{ tag }}.</p>
+  {% include "blog/_post_list.html" %}
+</div>
+{% endblock %}
